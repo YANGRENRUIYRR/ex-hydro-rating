@@ -25,11 +25,18 @@ function getRatingColor(rating: number) {
     return '808080';
 }
 
-async function fetchData(username: string): Promise<UserRatingInfo> {
-    const res = await fetch("https://hydro.ac/api", {
+async function fetchData(username: string,url: string): Promise<UserRatingInfo> {
+    url=url.toLowerCase();
+    if(url.lastIndexOf('https://')!=0&&url.lastIndexOf('http://')!=0){
+        url='https://'+url;
+    }
+    while(url.endsWith('/')){
+        url=url.slice(0,-1);
+    }
+    const res = await fetch(url+"/api", {
         headers: [
             ["content-type", "application/json"],
-            ["referer", "https://hydro.ac/"],
+            ["referer", url],
         ],
         body: JSON.stringify({"query":"query Example($name: String!) {\n  user(uname: $name) {\n    rpInfo\n    _id\n  }\n}","variables":{"name": username },"operationName":"Example"}),
         method: "POST",
@@ -71,12 +78,12 @@ async function getBadgeImage(username: string, data: UserRatingInfo, style: stri
 }
 
 export default async (request: VercelRequest, response: VercelResponse) => {
-    let { username = 'yangrenrui', style = 'for-the-badge' } = request.query;
+    let { username = 'yangrenrui', style = 'for-the-badge', base_url = 'https://hydro.ac' } = request.query;
 
     if (Array.isArray(username)) username = username[0];
     if (Array.isArray(style)) style = style[0];
-
-    const data = await fetchData(username as string).catch(() => ({ rating: 0, text: 'N/A', uid: 0}));
+    if (Array.isArray(base_url)) base_url = base_url[0];
+    const data = await fetchData(username as string,base_url as string).catch(() => ({ rating: 0, text: 'N/A', uid: 0}));
     getBadgeImage(username as string, data, style as string)
         .then((data) => {
             response
