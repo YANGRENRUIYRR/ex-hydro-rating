@@ -52,7 +52,7 @@ async function fetchData(username: string,url: string): Promise<UserRatingInfo> 
     if(userrp.contribution!=undefined) rat+=userrp.contribution;
     if(userrp.submissions!=undefined) rat+=userrp.submissions;
     if(rat==0) return { rating: 0, text: 'unrated', uid: user._id}
-    return {rating: rat.toFixed(2),text: rat.toFixed(2).toString(), uid: user._id }
+    return {rating: rat.toFixed(2),text: url+" "+rat.toFixed(2).toString(), uid: user._id }
 }
 
 async function getBadgeImage(username: string, data: UserRatingInfo, style: string) {
