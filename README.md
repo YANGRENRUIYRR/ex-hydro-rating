@@ -1,6 +1,6 @@
 The colours are designed like AtCoder:
 
-| Rating Range | Color |
+| Rating Range | Colour |
 | :-: | :-: |
 | $[430, +\infty)$ | $\color{#ff0000}\texttt{Red}$ |
 | $[360, 430)$ | $\color{#ff8000}\texttt{Orange}$ |
