@@ -1,4 +1,4 @@
-The colors are designed like AtCoder:
+The colours are designed like AtCoder:
 
 | Rating Range | Color |
 | :-: | :-: |
