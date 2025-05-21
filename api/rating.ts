@@ -55,7 +55,7 @@ async function fetchData(username: string,url: string): Promise<UserRatingInfo> 
     return {rating: rat.toFixed(2),text: url+" "+rat.toFixed(2).toString(), uid: user._id }
 }
 
-async function getBadgeImage(username: string, data: UserRatingInfo, style: string) {
+async function getBadgeImage(username: string, data: UserRatingInfo, style: string, base_url: string) {
     const color = getRatingColor(data.rating);
     const escapedUsername = escape(username);
     const escapedRatingText = escape(data.text);
@@ -64,7 +64,7 @@ async function getBadgeImage(username: string, data: UserRatingInfo, style: stri
         longCache: 'true',
         style,
         logo,
-        link: `https://hydro.ac/user/`+data.uid,
+        link: `https://`+base_url+`/user/`+data.uid,
     }).toString();
 
     console.log(params);
@@ -84,7 +84,7 @@ export default async (request: VercelRequest, response: VercelResponse) => {
     if (Array.isArray(style)) style = style[0];
     if (Array.isArray(base_url)) base_url = base_url[0];
     const data = await fetchData(username as string,base_url as string).catch(() => ({ rating: 0, text: 'N/A', uid: 0}));
-    getBadgeImage(username as string, data, style as string)
+    getBadgeImage(username as string, data, style as string,base_url as string)
         .then((data) => {
             response
                 .status(200)
