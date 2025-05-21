@@ -55,7 +55,14 @@ async function fetchData(username: string,url: string): Promise<UserRatingInfo> 
     return {rating: rat.toFixed(2),text: url+" "+rat.toFixed(2).toString(), uid: user._id }
 }
 
-async function getBadgeImage(username: string, data: UserRatingInfo, style: string, base_url: string) {
+async function getBadgeImage(username: string, data: UserRatingInfo, style: string, url: string) {
+    url=url.toLowerCase();
+    if(url.lastIndexOf('https://')!=0&&url.lastIndexOf('http://')!=0){
+        url='https://'+url;
+    }
+    while(url.endsWith('/')){
+        url=url.slice(0,-1);
+    }
     const color = getRatingColor(data.rating);
     const escapedUsername = escape(username);
     const escapedRatingText = escape(data.text);
@@ -64,7 +71,7 @@ async function getBadgeImage(username: string, data: UserRatingInfo, style: stri
         longCache: 'true',
         style,
         logo,
-        link: `https://`+base_url+`/user/`+data.uid,
+        link: url+`/user/`+data.uid,
     }).toString();
 
     console.log(params);
